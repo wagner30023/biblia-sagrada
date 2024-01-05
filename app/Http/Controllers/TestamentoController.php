@@ -69,10 +69,8 @@ class TestamentoController extends Controller
             $data = Testamento::find($testamento);
 
             if ($data) {
-                return response()->json([
-                    'message' => 'Resultado da pesquisa',
-                    'data' => $data
-                ], 201);
+                $data->testamento;
+                $data->livros;
             }
 
             return response()->json([
@@ -118,14 +116,13 @@ class TestamentoController extends Controller
             $data = Testamento::find($testamento);
             $data->delete();
 
-            if($data){
-                return response()->json(['success' => 'registro de testamento, deletado com sucesso'],201);
+            if ($data) {
+                return response()->json(['success' => 'registro de testamento, deletado com sucesso'], 201);
             }
 
-            return response()->json(['error' => 'Não foi possível deletar o registro'],401);
-
+            return response()->json(['error' => 'Não foi possível deletar o registro'], 401);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

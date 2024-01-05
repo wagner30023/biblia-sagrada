@@ -18,8 +18,8 @@ class LivroController extends Controller
         try {
             $data = Livro::all();
             return $data;
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -33,17 +33,17 @@ class LivroController extends Controller
     {
         try {
             $data = Livro::create($request->all());
-            if($data){
+            if ($data) {
                 return response()->json([
                     'message' => 'success versiculo adicionado com sucesso',
-                ],201);
+                ], 201);
             }
 
             return response()->json([
                 'message' => 'Não foi possivel registrar o versiculo',
             ]);
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -57,18 +57,18 @@ class LivroController extends Controller
     {
         try {
             $data = Livro::find($livro);
-            if($data){
-                return response()->json([
-                    'message' => 'Resultado da pesquisa',
-                    'data' => $data,
-                ],201);
+            if ($data) {
+                $data->testamento;
+                $data->versiculos;
+
+                return $data;
             }
 
             return response()->json([
                 'message' => 'nenhum resultado',
-            ],404);
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -85,18 +85,18 @@ class LivroController extends Controller
             $data = Livro::findOrFail($livro);
             $data->update($request->all());
 
-            if($data){
+            if ($data) {
                 return response()->json([
                     'message' => 'Dados atualizados com sucesso',
                     'data' => $data,
-                ],201);
+                ], 201);
             }
 
             return response()->json([
                 'message' => 'Não foi possivel atualizar o registro',
             ]);
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -112,17 +112,17 @@ class LivroController extends Controller
             $data = Livro::find($livro);
             $data->delete();
 
-            if($data){
+            if ($data) {
                 return response()->json([
                     'message' => 'Dados deletados com sucesso',
-                ],201);
+                ], 201);
             }
 
             return response()->json([
                 'message' => 'Não foi possivel apagar o registro',
             ]);
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

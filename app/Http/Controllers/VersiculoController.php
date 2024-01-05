@@ -63,10 +63,8 @@ class VersiculoController extends Controller
             $data = Versiculo::find($versiculo);
 
             if ($data) {
-                return response()->json([
-                    'results' => 'resultado da pesquisa',
-                    'data' => $data,
-                ]);
+                $data->livro; // relacionamento que quer trazer a resposta
+                return $data;
             }
 
             return response()->json([
