@@ -58,6 +58,26 @@ class AuthController extends Controller
             'token' => $token,
         ];
 
-        return response($response, 201);
+        return response(['message' => 'Autenticado',$response, 201]);
     }
+
+    public function logout(Request $request)
+    {
+        // Verifica se o usuário está autenticado
+        if (auth()->check()) {
+            // Se autenticado, exclui os tokens do usuário
+            auth()->user()->tokens()->delete();
+
+            // Retorna uma resposta de sucesso
+            return response([
+                'message' => 'Deslogado com sucesso'
+            ], 200);
+        } else {
+            // Se não estiver autenticado, retorna uma resposta apropriada
+            return response([
+                'message' => 'Usuário não autenticado'
+            ], 401); // Você pode usar um código de status HTTP diferente, como 401 Não Autorizado
+        }
+    }
+
 }
