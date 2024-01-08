@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Versao;
 use Illuminate\Http\Request;
-use App\Models\Livro;
 
-
-class LivroController extends Controller
+class VersaoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +14,13 @@ class LivroController extends Controller
      */
     public function index()
     {
-        try {
-            $data = Livro::all();
-            return $data;
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        $data = Versao::all();
+
+        if ($data) {
+            return response()->json([
+                'message' => 'Resultados da pesquisa',
+                'data' => $data
+            ]);
         }
     }
 
@@ -32,15 +33,16 @@ class LivroController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = Livro::create($request->all());
+            $data = Versao::create($request->all());
+
             if ($data) {
                 return response()->json([
-                    'message' => 'success versiculo adicionado com sucesso',
-                ], 201);
+                    'success' => 'Registro criado com sucesso.'
+                ]);
             }
 
             return response()->json([
-                'message' => 'Não foi possivel registrar o versiculo',
+                'error' => 'Não foi possível criar o registro.'
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -50,23 +52,23 @@ class LivroController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $livro
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($livro)
+    public function show($versao)
     {
         try {
-            $data = Livro::find($livro);
-            if ($data) {
-                $data->testamento;
-                $data->versiculos;
-                $data->versao;
-                return $data;
-            }
+            $data = Versao::find($versao);
 
-            return response()->json([
-                'message' => 'nenhum resultado',
-            ], 404);
+            if ($data) {
+                // vincula o idioma cadastrado
+                $data->idioma;
+                $data->livros;
+                return response()->json([
+                    'resultado da pesquisa',
+                    'data' => $data
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -76,29 +78,27 @@ class LivroController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $livro
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $livro)
+    public function update(Request $request, $versao)
     {
         try {
-            $data = Livro::findOrFail($livro);
-            // dd($request->all());
-            // $data->update($request->only(['posicao', 'nome', 'abreviacao', 'testamento_id', 'versao_id']));
-            // dd($data);
+            $data = Versao::find($versao);
+
             if ($data) {
                 $data->update($request->all());
+
                 return response()->json([
-                    'message' => 'Dados atualizados com sucesso',
-                    'data' => $data,
-                ], 201);
+                    'success' => 'Registro atualizado com sucesso',
+                    'data' => $data
+                ]);
             }
 
             return response()->json([
-                'message' => 'Não foi possivel atualizar o registro',
+                'error' => 'Não foi possível atualizar o registro'
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -109,20 +109,19 @@ class LivroController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($livro)
+    public function destroy($versao)
     {
         try {
-            $data = Livro::find($livro);
-            $data->delete();
+            $delete = Versao::destroy($versao);
 
-            if ($data) {
+            if($delete){
                 return response()->json([
-                    'message' => 'Dados deletados com sucesso',
-                ], 201);
+                    'sucess' => 'registro excluído com sucesso',
+                ]);
             }
 
             return response()->json([
-                'message' => 'Não foi possivel apagar o registro',
+                'error' => 'não foi possível excluir este registro'
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
