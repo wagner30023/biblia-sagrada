@@ -86,7 +86,7 @@ class LivroController extends Controller
             // dd($request->capa->getCLientOriginalName());
             $path = $request->capa->store('capa_livro','public');
             $data = Livro::find($livro);
-            Storage::disk('public')->url($data->capa);
+            // Storage::disk('public')->url($data->capa);
             if ($data) {
                 $data->capa = $path;
 
@@ -103,6 +103,7 @@ class LivroController extends Controller
                 //     'message' => 'Dados atualizados com sucesso',
                 //     'data' => $data,
                 // ], 201);
+                return $path;
             }
 
             return response()->json([
