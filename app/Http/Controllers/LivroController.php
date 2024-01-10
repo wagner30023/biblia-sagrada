@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Livro;
 
+use App\Http\Storage;
 
 class LivroController extends Controller
 {
@@ -82,16 +83,26 @@ class LivroController extends Controller
     public function update(Request $request, $livro)
     {
         try {
-            $data = Livro::findOrFail($livro);
-            // dd($request->all());
-            // $data->update($request->only(['posicao', 'nome', 'abreviacao', 'testamento_id', 'versao_id']));
-            // dd($data);
+            // dd($request->capa->getCLientOriginalName());
+            $path = $request->capa->store('capa_livro','public');
+            $data = Livro::find($livro);
+            Storage::disk('public')->url($data->capa);
             if ($data) {
-                $data->update($request->all());
+                $data->capa = $path;
+
+                if($data->save()){
+                    return $data;
+                }
+
                 return response()->json([
-                    'message' => 'Dados atualizados com sucesso',
-                    'data' => $data,
-                ], 201);
+                    'message' => 'Erro ao atualizar o livro.',
+                ]);
+
+                // $data->update($request->all());
+                // return response()->json([
+                //     'message' => 'Dados atualizados com sucesso',
+                //     'data' => $data,
+                // ], 201);
             }
 
             return response()->json([
