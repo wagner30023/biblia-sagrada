@@ -11,11 +11,14 @@ class Livro extends Model
 
     protected $fillable = ['posicao', 'nome', 'abreviacao', 'testamento_id','versao_id'];
 
+
+    // public $timestamps = false;
+
     /*
         * pegar o testamento
     */
 
-    public function testamentos()
+    public function testamento()
     {
         return $this->belongsTo(Testamento::class);
     }

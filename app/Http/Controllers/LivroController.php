@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LivroResource;
+use App\Http\Resources\LivrosCollection;
 use Illuminate\Http\Request;
 use App\Models\Livro;
 
@@ -17,7 +19,7 @@ class LivroController extends Controller
     public function index()
     {
         try {
-            $data = Livro::all();
+            $data = new LivrosCollection(Livro::all());
             return $data;
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -57,12 +59,12 @@ class LivroController extends Controller
     public function show($livro)
     {
         try {
-            $data = Livro::find($livro);
+            $data = Livro::with('testamento','versiculos','versao')->find($livro);
             if ($data) {
-                $data->testamento;
-                $data->versiculos;
-                $data->versao;
-                return $data;
+                // $data->testamento;
+                // $data->versiculos;
+                // $data->versao;
+                return new LivroResource($data);
             }
 
             return response()->json([

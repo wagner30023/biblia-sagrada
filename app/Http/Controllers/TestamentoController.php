@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TestamentoCollection;
+use App\Http\Resources\TestamentoResource;
 use App\Models\Testamento;
 use Illuminate\Http\Request;
 
@@ -15,18 +17,19 @@ class TestamentoController extends Controller
     public function index()
     {
         try {
-            $data = Testamento::all();
-
-            if ($data) {
-                return response()->json([
-                    'message' => 'pesquisa referente a todos os testamentos encontrados',
-                    'data' => $data
-                ]);
-            }
+            // $data = Testamento::all();
+            $data = new TestamentoCollection(Testamento::all());
+            return $data;
+            // if ($data) {
+            //     return response()->json([
+            //         'message' => 'pesquisa referente a todos os testamentos encontrados',
+            //         'data' => $data
+            //     ]);
+            // }
 
             return response()->json(['message' => 'Não foi possivel loacalizar a pesquisa relacionada']);
 
-            return $data;
+
         } catch (\Exception $e) {
             return response()->json(['Error' => $e->getMessage()], 500);
         }
@@ -66,11 +69,12 @@ class TestamentoController extends Controller
     public function show($testamento)
     {
         try {
-            $data = Testamento::find($testamento);
+            $data = Testamento::with('livros')->find($testamento);
 
             if ($data) {
-                $data->testamento;
-                $data->livros;
+                // $data->testamento;
+                // $data->livros;
+                return new TestamentoResource($data);
             }
 
             return response()->json([
