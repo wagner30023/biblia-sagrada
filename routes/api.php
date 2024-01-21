@@ -5,6 +5,7 @@ use App\Http\Controllers\TestamentoController;
 use App\Http\Controllers\LivroController;
 use App\Http\Controllers\VersiculoController;
 use App\Http\Controllers\IdiomaController;
+use App\Http\Controllers\SiteController;
 use App\Http\Controllers\VersaoController;
 use App\Models\Livro;
 use App\Models\Versiculo;
@@ -25,6 +26,10 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
 
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/register',[AuthController::class,'register']);
+
+
+Route::get('/site/{versao}',[SiteController::class,'ler_a_biblia']);
+
 
 // Route::prefix('testamento')->group(function(){
 //     Route::get('/',[TestamentoController::class,'index']);
